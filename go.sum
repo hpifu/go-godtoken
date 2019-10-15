@@ -84,7 +84,6 @@ github.com/hashicorp/golang-lru v0.5.0/go.mod h1:/m3WP610KZHVQ1SGc6re/UDhFvYD7pJ
 github.com/hashicorp/golang-lru v0.5.1/go.mod h1:/m3WP610KZHVQ1SGc6re/UDhFvYD7pJ4Ao+sR/qLZy8=
 github.com/hashicorp/hcl v1.0.0 h1:0Anlzjpi4vEasTeNFn2mLJgTSwt0+6sfsiTG8qcWGx4=
 github.com/hashicorp/hcl v1.0.0/go.mod h1:E5yfLk+7swimpb2L/Alb/PJmXilQ/rhwaUYs4T20WEQ=
-github.com/hatlonely/go-project-example-for-grpc v0.0.0-20190530080833-26a394a3a906 h1:5Qc81pzXbrfp4RGUxDuoZDjzbL0hRjUehvvWwGckAVo=
 github.com/hpcloud/tail v1.0.0/go.mod h1:ab1qPbhIpdTxEkNHXyeSf5vhxWSCs/tWer42PpOxQnU=
 github.com/hpifu/go-account v1.2.0/go.mod h1:qPUOaBOwRFh6KGt+Sv9xdBotatqKGDgXUCHNqzWW5KU=
 github.com/hpifu/go-kit v1.6.3 h1:DF/jLC3EWxowXwX/bFKmF+kT9kQI7rmL3IO+ueCty/Y=
