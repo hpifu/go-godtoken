@@ -1,0 +1,19 @@
+{
+    "service": {
+        "port": 6060
+    },
+    "logger": {
+        "infoLog": {
+            "filename": "log/godtoken.info",
+            "maxAge": "24h"
+        },
+        "warnLog": {
+            "filename": "log/godtoken.warn",
+            "maxAge": "24h"
+        },
+        "accessLog": {
+            "filename": "log/godtoken.access",
+            "maxAge": "24h"
+        }
+    }
+}

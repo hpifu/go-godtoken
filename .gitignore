@@ -1,0 +1,10 @@
+vendor/
+.idea/
+output/
+test.log
+test.log.*
+log/
+docker
+.vscode/
+stack.yml
+*.pb.go
