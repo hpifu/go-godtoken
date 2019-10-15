@@ -84,6 +84,8 @@ output: cmd/*/*.go internal/*/*.go scripts/version.sh Makefile vendor api/godtok
 	mkdir -p output/${repository}/bin && mv main output/${repository}/bin/${binary} && \
 	mkdir -p output/${repository}/configs && cp configs/${binary}/* output/${repository}/configs && \
 	mkdir -p output/${repository}/log
+	@go build -ldflags "-X 'main.AppVersion=`sh scripts/version.sh`'" cmd/${binary}-cli/main.go && \
+	mkdir -p output/${repository}/bin && mv main output/${repository}/bin/${binary}-cli
 
 vendor: go.mod
 	@echo "install golang dependency"
