@@ -14,7 +14,7 @@ var AppVersion = "unknown"
 
 func main() {
 	version := flag.Bool("v", false, "print current version")
-	address := flag.String("h", "127.0.0.1:7060", "address")
+	address := flag.String("h", "127.0.0.1:17060", "address")
 	flag.Parse()
 	if *version {
 		fmt.Println(AppVersion)
@@ -31,5 +31,5 @@ func main() {
 	client := api.NewServiceClient(conn)
 
 	res, err := client.GetToken(context.Background(), &api.GetTokenReq{Rid: "1234567"})
-	fmt.Println(res)
+	fmt.Println(res, err)
 }

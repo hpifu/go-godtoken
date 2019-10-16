@@ -91,7 +91,8 @@ vendor: go.mod
 	@echo "install golang dependency"
 	go mod vendor
 
-api: api/godtoken.pb.go
+api: api/godtoken.pb.go Makefile
+	cd api && python3 -m grpc_tools.protoc -I . --python_out=. --grpc_python_out=. godtoken.proto
 
 %_easyjson.go: %.go
 	easyjson $<
@@ -105,7 +106,8 @@ test: vendor
 	cd internal && go test -cover ./...
 
 .PHONY: behave
-behave: output
+behave: output api
+	cp api/*.py features/steps/
 	behave features
 
 .PHONY: stat
@@ -119,6 +121,8 @@ stat: cloc gocyclo
 .PHONY: clean
 clean:
 	rm -rf output
+	rm -rf api/*.py
+	rm -rf api/*.go
 
 .PHONY: deep_clean
 deep_clean:

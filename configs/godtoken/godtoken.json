@@ -3,7 +3,7 @@
         "port": 7060
     },
     "redis": {
-        "addr": "test-redis:6379",
+        "addr": "redis:6379",
         "dialTimeout": "20ms",
         "readTimeout": "20ms",
         "writeTimeout": "20ms",
