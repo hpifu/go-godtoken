@@ -95,7 +95,7 @@ api: api/godtoken.pb.go Makefile
 	protoc --go_out=plugins=grpc:. $<
 
 .PHONY: test
-test: vendor
+test: api vendor
 	@echo "Run unit tests"
 	cd internal && go test -cover ./...
 

@@ -28,10 +28,11 @@ replace (
 
 require (
 	github.com/go-redis/redis v6.15.2+incompatible
-	github.com/golang/protobuf v1.3.2 // indirect
+	github.com/golang/protobuf v1.3.2
 	github.com/hpifu/go-kit v1.6.3
 	github.com/lestrrat-go/file-rotatelogs v2.2.0+incompatible
 	github.com/sirupsen/logrus v1.4.2
 	github.com/spf13/viper v1.4.0
+	golang.org/x/net v0.0.0-20190603091049-60506f45cf65
 	google.golang.org/grpc v1.21.0
 )
