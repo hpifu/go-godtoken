@@ -107,7 +107,7 @@ test: vendor
 
 .PHONY: behave
 behave: output api
-	cp api/*.py features/steps/
+	cp api/*.py .
 	behave features
 
 .PHONY: stat

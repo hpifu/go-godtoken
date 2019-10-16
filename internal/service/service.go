@@ -2,13 +2,13 @@ package service
 
 import (
 	"context"
-	"time"
-
-	"github.com/hpifu/go-kit/hrand"
-
 	"github.com/go-redis/redis"
 	api "github.com/hpifu/go-godtoken/api"
+	"github.com/hpifu/go-kit/hrand"
 	"github.com/sirupsen/logrus"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/peer"
+	"time"
 )
 
 var InfoLog *logrus.Logger = logrus.New()
@@ -41,11 +41,6 @@ func (s *Service) GetToken(ctx context.Context, req *api.GetTokenReq) (*api.GetT
 		Token: token,
 	}
 
-	AccessLog.WithFields(logrus.Fields{
-		"req": req,
-		"res": res,
-	}).Info()
-
 	return res, nil
 }
 
@@ -59,10 +54,27 @@ func (s *Service) Verify(ctx context.Context, req *api.VerifyReq) (*api.VerifyRe
 		Ok: token == req.Token,
 	}
 
+	return res, nil
+}
+
+func Interceptor(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (resp interface{}, err error) {
+	ts := time.Now()
+	p, ok := peer.FromContext(ctx)
+	clientIP := ""
+	if ok && p != nil {
+		clientIP = p.Addr.String()
+	}
+
+	res, err := handler(ctx, req)
+
 	AccessLog.WithFields(logrus.Fields{
-		"req": req,
-		"res": res,
+		"client":    clientIP,
+		"url":       info.FullMethod,
+		"req":       req,
+		"res":       res,
+		"err":       err,
+		"resTimeNs": time.Now().Sub(ts).Nanoseconds(),
 	}).Info()
 
-	return res, nil
+	return res, err
 }

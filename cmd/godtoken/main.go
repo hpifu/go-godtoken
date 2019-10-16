@@ -83,7 +83,9 @@ func main() {
 	infoLog.Infof("%v init success, port[%v]", os.Args[0], config.GetString("service.port"))
 
 	// run server
-	server := grpc.NewServer()
+	server := grpc.NewServer(
+		grpc.UnaryInterceptor(service.Interceptor),
+	)
 	go func() {
 		api.RegisterServiceServer(server, service.NewService(rc))
 		address, err := net.Listen("tcp", fmt.Sprintf("0.0.0.0:%v", config.GetInt("service.port")))
