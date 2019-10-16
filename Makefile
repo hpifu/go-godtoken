@@ -28,26 +28,20 @@ buildenv:
 	if [ -z "$(shell docker network ls --filter name=testnet -q)" ]; then \
 		docker network create -d bridge testnet; \
 	fi
-	# if [ -z "$(shell docker ps --filter name=test-elasticsearch -q)" ]; then \
-	# 	docker run --name test-elasticsearch --hostname test-elasticsearch --network testnet -e "discovery.type=single-node" -d elasticsearch:7.3.2; \
-	# fi
-	if [ -z "$(shell docker ps --filter name=test-mysql -q)" ]; then \
-		docker run --name test-mysql --hostname test-mysql --network testnet -e MYSQL_ROOT_PASSWORD=keaiduo1 -d hatlonely/mysql:v1.0.1; \
-	fi
 	if [ -z "$(shell docker ps --filter name=go-build-env -q)" ]; then \
 		docker run --name go-build-env --network testnet -d hatlonely/go-env:v1.0.1 tail -f /dev/null; \
+	fi
+	if [ -z "$(shell docker ps --filter name=test-redis -q)" ]; then \
+		docker run --name test-redis --hostname test-redis --network testnet -d redis:5.0.5-alpine; \
 	fi
 
 .PHONY: cleanbuildenv
 cleanbuildenv:
+	if [ -z "$(shell docker ps --filter name=test-redis -q)" ]; then \
+		docker run --name test-redis --hostname test-redis --network testnet -d redis:5.0.5-alpine; \
+	fi
 	if [ ! -z "$(shell docker ps --filter name=go-build-env -q)" ]; then \
 		docker stop go-build-env  && docker rm go-build-env; \
-	fi
-	# if [ ! -z "$(shell docker ps --filter name=test-elasticsearch -q)" ]; then \
-	# 	docker stop test-elasticsearch && docker rm test-elasticsearch; \
-	# fi
-	if [ ! -z "$(shell docker ps --filter name=test-mysql -q)" ]; then \
-		docker stop test-mysql && docker rm test-mysql; \
 	fi
 	if [ ! -z "$(shell docker network ls --filter name=testnet -q)" ]; then \
 		docker network rm testnet; \
