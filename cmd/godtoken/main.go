@@ -74,8 +74,8 @@ func main() {
 		Password:     config.GetString("redis.password"),
 		DB:           config.GetInt("redis.db"),
 	}
-	client := redis.NewClient(option)
-	if err := client.Ping().Err(); err != nil {
+	rc := redis.NewClient(option)
+	if err := rc.Ping().Err(); err != nil {
 		panic(err)
 	}
 	infoLog.Infof("init redis success. option [%#v]", option)
@@ -85,7 +85,7 @@ func main() {
 	// run server
 	server := grpc.NewServer()
 	go func() {
-		api.RegisterServiceServer(server, service.NewService())
+		api.RegisterServiceServer(server, service.NewService(rc))
 		address, err := net.Listen("tcp", fmt.Sprintf("0.0.0.0:%v", config.GetInt("service.port")))
 		if err != nil {
 			panic(err)

@@ -4,16 +4,17 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"os"
+
 	api "github.com/hpifu/go-godtoken/api"
 	"google.golang.org/grpc"
-	"os"
 )
 
 var AppVersion = "unknown"
 
 func main() {
 	version := flag.Bool("v", false, "print current version")
-	address := flag.String("h", "127.0.0.1:6060", "address")
+	address := flag.String("h", "127.0.0.1:7060", "address")
 	flag.Parse()
 	if *version {
 		fmt.Println(AppVersion)
@@ -29,6 +30,6 @@ func main() {
 
 	client := api.NewServiceClient(conn)
 
-	res, err := client.Do(context.Background(), &api.Request{Message: "hatlonely"})
+	res, err := client.GetToken(context.Background(), &api.GetTokenReq{Rid: "1234567"})
 	fmt.Println(res)
 }

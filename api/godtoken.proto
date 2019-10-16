@@ -2,15 +2,24 @@ syntax = "proto3";
 
 package godtoken;
 
-message Request {
-    string message = 1;
+message GetTokenReq {
+    string rid = 1;
 }
 
-message Response {
-    string message = 1;
-    string err = 2;
+message GetTokenRes {
+    string token = 1;
+}
+
+message VerifyReq {
+    string rid = 1;
+    string token = 2;
+}
+
+message VerifyRes {
+    bool ok = 1;
 }
 
 service Service {
-    rpc do (Request) returns (Response);
+    rpc GetToken (GetTokenReq) returns (GetTokenRes);
+    rpc Verify (VerifyReq) returns (VerifyRes);
 }
