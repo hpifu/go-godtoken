@@ -29,7 +29,7 @@ buildenv:
 		docker network create -d bridge testnet; \
 	fi
 	if [ -z "$(shell docker ps --filter name=go-build-env -q)" ]; then \
-		docker run --name go-build-env --network testnet -d hatlonely/go-env:v1.0.1 tail -f /dev/null; \
+		docker run --name go-build-env --network testnet -d hatlonely/go-env:v1.1.0 tail -f /dev/null; \
 	fi
 	if [ -z "$(shell docker ps --filter name=test-redis -q)" ]; then \
 		docker run --name test-redis --hostname test-redis --network testnet -d redis:5.0.5-alpine; \
@@ -72,7 +72,7 @@ dockerbehave: buildenv
 	docker cp . go-build-env:/data/src/${gituser}/${repository}
 	docker exec go-build-env bash -c "cd /data/src/${gituser}/${repository} && make behave"
 
-output: cmd/*/*.go internal/*/*.go scripts/version.sh Makefile vendor api/godtoken.pb.go
+output: cmd/*/*.go internal/*/*.go scripts/version.sh Makefile api vendor
 	@echo "compile"
 	@go build -ldflags "-X 'main.AppVersion=`sh scripts/version.sh`'" cmd/${binary}/main.go && \
 	mkdir -p output/${repository}/bin && mv main output/${repository}/bin/${binary} && \
