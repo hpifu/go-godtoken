@@ -92,7 +92,7 @@ api: api/godtoken.pb.go Makefile
 	easyjson $<
 
 %.pb.go: %.proto
-	protoc --gofast_out=plugins=grpc:. $<
+	protoc --go_out=plugins=grpc:. $<
 
 .PHONY: test
 test: vendor
@@ -115,8 +115,8 @@ stat: cloc gocyclo
 .PHONY: clean
 clean:
 	rm -rf output
-	rm -rf api/*.py
-	rm -rf api/*.go
+	rm -rf api/*.py api/*.go
+	rm -rf *_pb2_grpc.py *_pb2.py __pycache__
 
 .PHONY: deep_clean
 deep_clean:
