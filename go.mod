@@ -4,6 +4,7 @@ go 1.12
 
 replace (
 	cloud.google.com/go => github.com/googleapis/google-cloud-go v0.0.0-20190603211518-c8433c9aaceb
+	go.etcd.io/bbolt => github.com/etcd-io/bbolt v1.3.4-0.20191001164932-6e135e5d7e3d
 	go.uber.org/atomic => github.com/uber-go/atomic v1.4.1-0.20190731194737-ef0d20d85b01
 	go.uber.org/multierr => github.com/uber-go/multierr v1.2.0
 	go.uber.org/zap => github.com/uber-go/zap v1.10.1-0.20190926184545-d8445f34b4ae
@@ -27,11 +28,10 @@ replace (
 
 require (
 	github.com/go-redis/redis v6.15.2+incompatible
-	github.com/golang/protobuf v1.3.2
+	github.com/golang/protobuf v1.3.2 // indirect
 	github.com/hpifu/go-kit v1.6.3
 	github.com/lestrrat-go/file-rotatelogs v2.2.0+incompatible
 	github.com/sirupsen/logrus v1.4.2
 	github.com/spf13/viper v1.4.0
-	golang.org/x/net v0.0.0-20190603091049-60506f45cf65
 	google.golang.org/grpc v1.21.0
 )
