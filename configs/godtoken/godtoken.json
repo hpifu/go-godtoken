@@ -1,6 +1,16 @@
 {
     "service": {
-        "port": 6060
+        "port": 7060
+    },
+    "redis": {
+        "addr": "test-redis:6379",
+        "dialTimeout": "20ms",
+        "readTimeout": "20ms",
+        "writeTimeout": "20ms",
+        "maxRetries": 3,
+        "poolSize": 4,
+        "password": "",
+        "db": 0
     },
     "logger": {
         "infoLog": {

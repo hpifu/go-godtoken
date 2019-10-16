@@ -9,6 +9,7 @@ import (
 	"strings"
 	"syscall"
 
+	"github.com/go-redis/redis"
 	api "github.com/hpifu/go-godtoken/api"
 	"github.com/hpifu/go-godtoken/internal/service"
 	"github.com/hpifu/go-kit/logger"
@@ -61,6 +62,23 @@ func main() {
 	service.InfoLog = infoLog
 	service.WarnLog = warnLog
 	service.AccessLog = accessLog
+
+	// init redis
+	option := &redis.Options{
+		Addr:         config.GetString("redis.addr"),
+		DialTimeout:  config.GetDuration("redis.dialTimeout"),
+		ReadTimeout:  config.GetDuration("redis.readTimeout"),
+		WriteTimeout: config.GetDuration("redis.writeTimeout"),
+		MaxRetries:   config.GetInt("redis.maxRetries"),
+		PoolSize:     config.GetInt("redis.poolSize"),
+		Password:     config.GetString("redis.password"),
+		DB:           config.GetInt("redis.db"),
+	}
+	client := redis.NewClient(option)
+	if err := client.Ping().Err(); err != nil {
+		panic(err)
+	}
+	infoLog.Infof("init redis success. option [%#v]", option)
 
 	infoLog.Infof("%v init success, port[%v]", os.Args[0], config.GetString("service.port"))
 

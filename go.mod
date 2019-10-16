@@ -26,6 +26,7 @@ replace (
 )
 
 require (
+	github.com/go-redis/redis v6.15.2+incompatible
 	github.com/golang/protobuf v1.3.2
 	github.com/hpifu/go-kit v1.6.3
 	github.com/lestrrat-go/file-rotatelogs v2.2.0+incompatible
