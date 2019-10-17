@@ -115,7 +115,7 @@ stat: cloc gocyclo
 .PHONY: clean
 clean:
 	rm -rf output
-	rm -rf api/*.py api/*.go
+	rm -rf api/*.py api/*.pb.go
 	rm -rf *_pb2_grpc.py *_pb2.py __pycache__
 
 .PHONY: deep_clean

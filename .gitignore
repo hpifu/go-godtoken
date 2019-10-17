@@ -7,7 +7,6 @@ log/
 docker
 .vscode/
 stack.yml
-*.pb.go
 *_pb2.py
 *_pb2_grpc.py
 __pycache__/
