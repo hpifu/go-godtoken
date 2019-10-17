@@ -20,7 +20,7 @@ deploytest:
 	if [ -z "$(shell docker network ls --filter name=testnet -q)" ]; then \
 		docker network create -d bridge testnet; \
 	fi
-	if [ ! -z "$(shell docker ps --filter name=test-go-godtoken -q)" ]; then \
+	if [ ! -z "$(shell docker ps -a --filter name=test-go-godtoken -q)" ]; then \
 		docker stop test-go-godtoken && docker docker rm test-go-godtoken; \
 	fi
 	docker run --name test-go-godtoken --hostname test-go-godtoken --network testnet -d \
@@ -41,19 +41,19 @@ buildenv:
 	if [ -z "$(shell docker network ls --filter name=testnet -q)" ]; then \
 		docker network create -d bridge testnet; \
 	fi
-	if [ -z "$(shell docker ps --filter name=go-build-env -q)" ]; then \
+	if [ -z "$(shell docker ps -a --filter name=go-build-env -q)" ]; then \
 		docker run --name go-build-env --network testnet -d hatlonely/go-env:v1.1.0 tail -f /dev/null; \
 	fi
-	if [ -z "$(shell docker ps --filter name=test-redis -q)" ]; then \
+	if [ -z "$(shell docker ps -a --filter name=test-redis -q)" ]; then \
 		docker run --name test-redis --hostname test-redis --network testnet -d redis:5.0.5-alpine; \
 	fi
 
 .PHONY: cleanbuildenv
 cleanbuildenv:
-	if [ -z "$(shell docker ps --filter name=test-redis -q)" ]; then \
+	if [ -z "$(shell docker ps -a --filter name=test-redis -q)" ]; then \
 		docker run --name test-redis --hostname test-redis --network testnet -d redis:5.0.5-alpine; \
 	fi
-	if [ ! -z "$(shell docker ps --filter name=go-build-env -q)" ]; then \
+	if [ ! -z "$(shell docker ps -a --filter name=go-build-env -q)" ]; then \
 		docker stop go-build-env  && docker rm go-build-env; \
 	fi
 	if [ ! -z "$(shell docker network ls --filter name=testnet -q)" ]; then \
