@@ -21,7 +21,7 @@ deploytest:
 		docker network create -d bridge testnet; \
 	fi
 	if [ ! -z "$(shell docker ps -a --filter name=test-go-godtoken -q)" ]; then \
-		docker stop test-go-godtoken && docker docker rm test-go-godtoken; \
+		docker stop test-go-godtoken && docker rm test-go-godtoken; \
 	fi
 	docker run --name test-go-godtoken --hostname test-go-godtoken --network testnet -d \
 		-e GODTOKEN_REDIS_ADDR="test-redis:6379" \

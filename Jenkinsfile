@@ -21,7 +21,7 @@ pipeline {
                 sh 'make deploy'
             }
         }
-        stage('deploy') {
+        stage('deploy test') {
             steps {
                 sh 'make deploytest'
             }
