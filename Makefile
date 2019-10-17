@@ -85,6 +85,7 @@ vendor: go.mod
 	@echo "install golang dependency"
 	go mod vendor
 
+.PHONY: api
 api: api/godtoken.pb.go Makefile
 	cd api && python3 -m grpc_tools.protoc -I . --python_out=. --grpc_python_out=. godtoken.proto
 
@@ -115,7 +116,7 @@ stat: cloc gocyclo
 .PHONY: clean
 clean:
 	rm -rf output
-	rm -rf api/*.py api/*.pb.go
+	rm -rf api/*.py
 	rm -rf *_pb2_grpc.py *_pb2.py __pycache__
 
 .PHONY: deep_clean
