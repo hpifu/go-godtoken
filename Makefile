@@ -15,6 +15,19 @@ deploy:
 	mkdir -p /var/docker/${repository}/log
 	docker stack deploy -c stack.yml ${repository}
 
+.PHONY: deploytest
+deploytest:
+	if [ -z "$(shell docker network ls --filter name=testnet -q)" ]; then \
+		docker network create -d bridge testnet; \
+	fi
+	if [ ! -z "$(shell docker ps --filter name=test-go-godtoken -q)" ]; then \
+		docker stop test-go-godtoken && docker docker rm test-go-godtoken; \
+	fi
+	docker run --name test-go-godtoken --hostname test-go-godtoken --network testnet -d \
+		-e GODTOKEN_REDIS_ADDR="test-redis:6379" \
+		-e GODTOKEN_SERVICE_PORT="17060" \
+		${dockeruser}/${repository}:${version}
+
 .PHONY: remove
 remove:
 	docker stack rm ${repository}

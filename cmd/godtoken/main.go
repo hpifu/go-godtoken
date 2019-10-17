@@ -32,7 +32,7 @@ func main() {
 
 	// load config
 	config := viper.New()
-	config.SetEnvPrefix("account")
+	config.SetEnvPrefix("godtoken")
 	config.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
 	config.AutomaticEnv()
 	config.SetConfigType("json")
@@ -80,7 +80,7 @@ func main() {
 	}
 	infoLog.Infof("init redis success. option [%#v]", option)
 
-	infoLog.Infof("%v init success, port[%v]", os.Args[0], config.GetString("service.port"))
+	infoLog.Infof("%v init success, port[%v]", os.Args[0], config.GetInt("service.port"))
 
 	// run server
 	server := grpc.NewServer(
