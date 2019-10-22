@@ -12,9 +12,13 @@ services:
     networks:
       - ${repository}net
       - redisnet
+      - elasticsearchnet
 networks:
   ${repository}net:
     name: ${repository}net
   redisnet:
     external: true
     name: redisnet
+  elasticsearchnet:
+    external: true
+    name: elasticsearchnet
