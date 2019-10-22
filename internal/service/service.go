@@ -2,11 +2,12 @@ package service
 
 import (
 	"context"
+	"time"
+
 	"github.com/go-redis/redis"
 	api "github.com/hpifu/go-godtoken/api"
 	"github.com/hpifu/go-kit/hrand"
 	"github.com/sirupsen/logrus"
-	"time"
 )
 
 func NewService(rc *redis.Client) *Service {
@@ -38,7 +39,7 @@ func (s *Service) GetToken(ctx context.Context, req *api.GetTokenReq) (*api.GetT
 	}
 	if err == redis.Nil || token == "" {
 		token = hrand.NewToken()
-		if err := s.rc.Set("godtoken", token, 5*time.Second).Err(); err != nil {
+		if err := s.rc.Set("godtoken", token, 15*time.Minute).Err(); err != nil {
 			return nil, err
 		}
 	}
