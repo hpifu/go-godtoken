@@ -3,6 +3,8 @@ package main
 import (
 	"flag"
 	"fmt"
+	"github.com/hpifu/go-kit/hgrpc"
+	"github.com/sirupsen/logrus"
 	"net"
 	"os"
 	"os/signal"
@@ -14,8 +16,10 @@ import (
 	"github.com/hpifu/go-godtoken/internal/service"
 	"github.com/hpifu/go-kit/logger"
 	rotatelogs "github.com/lestrrat-go/file-rotatelogs"
+	"github.com/olivere/elastic/v7"
 	"github.com/spf13/viper"
 	"google.golang.org/grpc"
+	"gopkg.in/sohlich/elogrus.v7"
 )
 
 // AppVersion name
@@ -46,22 +50,22 @@ func main() {
 	}
 
 	// init logger
-	infoLog, err := logger.NewTextLoggerWithViper(config.Sub("logger.infoLog"))
+	infoLog, warnLog, accessLog, err := logger.NewLoggerGroupWithViper(config.Sub("logger"))
 	if err != nil {
 		panic(err)
 	}
-	warnLog, err := logger.NewTextLoggerWithViper(config.Sub("logger.warnLog"))
+	client, err := elastic.NewClient(
+		elastic.SetURL(config.GetString("es.uri")),
+		elastic.SetSniff(false),
+	)
 	if err != nil {
 		panic(err)
 	}
-	accessLog, err := logger.NewJsonLoggerWithViper(config.Sub("logger.accessLog"))
+	hook, err := elogrus.NewAsyncElasticHook(client, "go-godtoken", logrus.InfoLevel, "go-godtoken-log")
 	if err != nil {
 		panic(err)
 	}
-
-	service.InfoLog = infoLog
-	service.WarnLog = warnLog
-	service.AccessLog = accessLog
+	accessLog.Hooks.Add(hook)
 
 	// init redis
 	option := &redis.Options{
@@ -82,12 +86,15 @@ func main() {
 
 	infoLog.Infof("%v init success, port[%v]", os.Args[0], config.GetInt("service.port"))
 
+	interceptor := hgrpc.NewGrpcInterceptor(infoLog, warnLog, accessLog)
 	// run server
 	server := grpc.NewServer(
-		grpc.UnaryInterceptor(service.Interceptor),
+		grpc.UnaryInterceptor(interceptor.Interceptor),
 	)
 	go func() {
-		api.RegisterServiceServer(server, service.NewService(rc))
+		svc := service.NewService(rc)
+		svc.SetLogger(infoLog, warnLog, accessLog)
+		api.RegisterServiceServer(server, svc)
 		address, err := net.Listen("tcp", fmt.Sprintf("0.0.0.0:%v", config.GetInt("service.port")))
 		if err != nil {
 			panic(err)
@@ -106,8 +113,8 @@ func main() {
 	server.GracefulStop()
 
 	// close loggers
-	warnLog.Out.(*rotatelogs.RotateLogs).Close()
-	accessLog.Out.(*rotatelogs.RotateLogs).Close()
+	_ = warnLog.Out.(*rotatelogs.RotateLogs).Close()
+	_ = accessLog.Out.(*rotatelogs.RotateLogs).Close()
 	infoLog.Errorf("%v shutdown success", os.Args[0])
-	infoLog.Out.(*rotatelogs.RotateLogs).Close()
+	_ = infoLog.Out.(*rotatelogs.RotateLogs).Close()
 }

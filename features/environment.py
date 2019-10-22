@@ -22,6 +22,9 @@ config = {
     "service": {
         "port": 17060
     },
+    "es": {
+        "uri": "http://test-elasticsearch:9200"
+    },
     "redis": {
         "host": "test-redis",
         "port": 6379
@@ -48,6 +51,7 @@ def deploy():
     cf = json.loads(fp.read())
     fp.close()
     cf["service"]["port"] = config["service"]["port"]
+    cf["es"]["uri"] = config["es"]["uri"]
     cf["redis"]["addr"] = "{host}:{port}".format(
         host=config["redis"]["host"],
         port=config["redis"]["port"],

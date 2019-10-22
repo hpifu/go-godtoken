@@ -6,23 +6,29 @@ import (
 	api "github.com/hpifu/go-godtoken/api"
 	"github.com/hpifu/go-kit/hrand"
 	"github.com/sirupsen/logrus"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/peer"
 	"time"
 )
 
-var InfoLog *logrus.Logger = logrus.New()
-var WarnLog *logrus.Logger = logrus.New()
-var AccessLog *logrus.Logger = logrus.New()
-
 func NewService(rc *redis.Client) *Service {
 	return &Service{
-		rc: rc,
+		rc:        rc,
+		infoLog:   logrus.New(),
+		warnLog:   logrus.New(),
+		accessLog: logrus.New(),
 	}
 }
 
+func (s *Service) SetLogger(infoLog, warnLog, accessLog *logrus.Logger) {
+	s.infoLog = infoLog
+	s.warnLog = warnLog
+	s.accessLog = accessLog
+}
+
 type Service struct {
-	rc *redis.Client
+	rc        *redis.Client
+	infoLog   *logrus.Logger
+	warnLog   *logrus.Logger
+	accessLog *logrus.Logger
 }
 
 func (s *Service) GetToken(ctx context.Context, req *api.GetTokenReq) (*api.GetTokenRes, error) {
@@ -55,26 +61,4 @@ func (s *Service) Verify(ctx context.Context, req *api.VerifyReq) (*api.VerifyRe
 	}
 
 	return res, nil
-}
-
-func Interceptor(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (resp interface{}, err error) {
-	ts := time.Now()
-	p, ok := peer.FromContext(ctx)
-	clientIP := ""
-	if ok && p != nil {
-		clientIP = p.Addr.String()
-	}
-
-	res, err := handler(ctx, req)
-
-	AccessLog.WithFields(logrus.Fields{
-		"client":    clientIP,
-		"url":       info.FullMethod,
-		"req":       req,
-		"res":       res,
-		"err":       err,
-		"resTimeNs": time.Now().Sub(ts).Nanoseconds(),
-	}).Info()
-
-	return res, err
 }

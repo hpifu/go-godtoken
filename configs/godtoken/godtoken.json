@@ -2,6 +2,9 @@
     "service": {
         "port": 7060
     },
+    "es": {
+        "uri": "http://elasticsearch:9200"
+    },
     "redis": {
         "addr": "redis:6379",
         "dialTimeout": "20ms",
