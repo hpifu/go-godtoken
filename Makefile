@@ -26,6 +26,7 @@ deploytest:
 	docker run --name test-go-godtoken --hostname test-go-godtoken --network testnet -d \
 		-e GODTOKEN_REDIS_ADDR="test-redis:6379" \
 		-e GODTOKEN_SERVICE_PORT="17060" \
+		-e GODTOKEN_ES_URI="http://test-elasticsearch:9200" \
 		${dockeruser}/${repository}:${version}
 
 .PHONY: remove
