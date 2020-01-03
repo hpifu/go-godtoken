@@ -74,16 +74,16 @@ image: buildenv
 
 .PHONY: dockertest
 dockertest: buildenv
-	docker exec go-build-env rm -rf /data/src/${gituser}/${repository}
-	docker exec go-build-env mkdir -p /data/src/${gituser}/${repository}
-	docker cp . go-build-env:/data/src/${gituser}/${repository}
+	# docker exec go-build-env rm -rf /data/src/${gituser}/${repository}
+	# docker exec go-build-env mkdir -p /data/src/${gituser}/${repository}
+	# docker cp . go-build-env:/data/src/${gituser}/${repository}
 	docker exec go-build-env bash -c "cd /data/src/${gituser}/${repository} && make test"
 
 .PHONY: dockerbehave
 dockerbehave: buildenv
-	docker exec go-build-env rm -rf /data/src/${gituser}/${repository}
-	docker exec go-build-env mkdir -p /data/src/${gituser}/${repository}
-	docker cp . go-build-env:/data/src/${gituser}/${repository}
+	# docker exec go-build-env rm -rf /data/src/${gituser}/${repository}
+	# docker exec go-build-env mkdir -p /data/src/${gituser}/${repository}
+	# docker cp . go-build-env:/data/src/${gituser}/${repository}
 	docker exec go-build-env bash -c "cd /data/src/${gituser}/${repository} && make behave"
 
 output: cmd/*/*.go internal/*/*.go scripts/version.sh Makefile api vendor
