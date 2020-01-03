@@ -86,28 +86,26 @@ dockerbehave: buildenv
 	# docker cp . go-build-env:/data/src/${gituser}/${repository}
 	docker exec go-build-env bash -c "cd /data/src/${gituser}/${repository} && make behave"
 
-output: cmd/*/*.go internal/*/*.go scripts/version.sh Makefile api vendor
+output: cmd/*/*.go internal/*/*.go scripts/version.sh Makefile api/godtoken.pb.go vendor
 	@echo "compile"
-	@go build -ldflags "-X 'main.AppVersion=`sh scripts/version.sh`'" cmd/${binary}/main.go && \
+	rm -rf output
+	go build -ldflags "-X 'main.AppVersion=`sh scripts/version.sh`'" cmd/${binary}/main.go && \
 	mkdir -p output/${repository}/bin && mv main output/${repository}/bin/${binary} && \
 	mkdir -p output/${repository}/configs && cp configs/${binary}/* output/${repository}/configs && \
 	mkdir -p output/${repository}/log
-	@go build -ldflags "-X 'main.AppVersion=`sh scripts/version.sh`'" cmd/${binary}-cli/main.go && \
+	go build -ldflags "-X 'main.AppVersion=`sh scripts/version.sh`'" cmd/${binary}-cli/main.go && \
 	mkdir -p output/${repository}/bin && mv main output/${repository}/bin/${binary}-cli
 
 vendor: go.mod
 	@echo "install golang dependency"
 	go mod vendor
 
-.PHONY: api
-api: api/godtoken.pb.go Makefile
-	cd api && python3 -m grpc_tools.protoc -I . --python_out=. --grpc_python_out=. godtoken.proto
-
 %_easyjson.go: %.go
 	easyjson $<
 
 %.pb.go: %.proto
 	protoc --go_out=plugins=grpc:. $<
+	cd api && python3 -m grpc_tools.protoc -I . --python_out=. --grpc_python_out=. godtoken.proto
 
 .PHONY: test
 test: api vendor
