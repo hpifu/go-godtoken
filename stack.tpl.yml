@@ -10,15 +10,8 @@ services:
     volumes:
       - "/var/docker/${repository}/log:/var/docker/${repository}/log"
     networks:
-      - ${repository}net
-      - redisnet
-      - elasticsearchnet
+      - online
 networks:
-  ${repository}net:
-    name: ${repository}net
-  redisnet:
+  online:
     external: true
-    name: redisnet
-  elasticsearchnet:
-    external: true
-    name: elasticsearchnet
+    name: online
