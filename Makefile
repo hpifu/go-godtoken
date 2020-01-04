@@ -46,16 +46,16 @@ buildenv:
 		docker run --name go-build-env --network testnet -d hatlonely/go-env:v1.1.0 tail -f /dev/null; \
 	fi
 	if [ -z "$(shell docker ps -a --filter name=test-redis -q)" ]; then \
-		docker run --name test-redis --hostname test-redis --network testnet -d redis:5.0.5-alpine; \
+		docker run --name test-redis --hostname test-redis --network testnet -d redis:5.0.7; \
 	fi
 
 .PHONY: cleanbuildenv
 cleanbuildenv:
 	if [ -z "$(shell docker ps -a --filter name=test-redis -q)" ]; then \
-		docker run --name test-redis --hostname test-redis --network testnet -d redis:5.0.5-alpine; \
+		docker stop test-redis && docker rm test-redis; \
 	fi
 	if [ ! -z "$(shell docker ps -a --filter name=go-build-env -q)" ]; then \
-		docker stop go-build-env  && docker rm go-build-env; \
+		docker stop go-build-env && docker rm go-build-env; \
 	fi
 	if [ ! -z "$(shell docker network ls --filter name=testnet -q)" ]; then \
 		docker network rm testnet; \
